@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>For You — A Heartful Mobile Card</title>
+
+  <style>
+    :root{
+      --bg1:#071022;
+      --bg2:#0e2740;
+      --accent:#ff5c9c;
+      --accent2:#ffb3d1;
+      --card-radius:20px;
+      font-family:Inter, sans-serif;
+    }
+
+    html,body{height:100%;margin:0;padding:0;}
+    body{
+      padding:20px;
+      background:radial-gradient(800px 400px at 10% 10%, rgba(255,92,156,0.06), transparent),
+                 linear-gradient(180deg,var(--bg1),var(--bg2));
+      color:#fff;
+      display:flex;align-items:center;justify-content:center;
+      overflow-x:hidden;
+    }
+
+    /* CARD */
+    .card{
+      width:100%;max-width:560px;
+      background:rgba(255,255,255,0.03);
+      padding:20px;border-radius:20px;
+      border:1px solid rgba(255,255,255,0.09);
+      box-shadow:0 10px 40px rgba(0,0,0,0.55);
+      animation:fadeIn .6s ease;
+      position:relative;overflow:hidden;
+    }
+    @keyframes fadeIn{from{opacity:0;transform:scale(.95);}to{opacity:1;transform:scale(1);} }
+
+    /* HEADER */
+    header{display:flex;gap:16px;align-items:center;}
+    .avatar{
+      width:80px;height:80px;border-radius:50%;
+      overflow:hidden;
+      border:3px solid var(--accent);
+      box-shadow:0 0 18px rgba(255,92,156,0.6);
+    }
+    .avatar img{width:100%;height:100%;object-fit:cover;}
+
+    h1{margin:0;font-size:20px;}
+    .lead{font-size:14px;opacity:.9;margin:4px 0 0;}
+
+    /* GALLERY */
+    .gallery{display:flex;gap:10px;margin:18px 0;}
+    .pic{
+      flex:1;height:120px;border-radius:14px;
+      overflow:hidden;
+      border:2px solid var(--accent);
+      box-shadow:0 0 20px rgba(255,92,156,0.6);
+      animation:picGlow 3s ease-in-out infinite alternate;
+    }
+    @keyframes picGlow{
+      0%{box-shadow:0 0 10px rgba(255,92,156,.3);}
+      100%{box-shadow:0 0 26px rgba(255,92,156,.7);}
+    }
+    .pic img{width:100%;height:100%;object-fit:cover;}
+
+    /* MESSAGE */
+    .message{
+      background:rgba(255,255,255,0.04);
+      padding:16px;border-radius:14px;
+      font-size:15px;line-height:1.55;
+    }
+
+    /* BUTTONS */
+    .actions{display:flex;gap:10px;margin-top:14px;}
+    .btn{
+      flex:1;padding:12px;border:none;color:#111;
+      border-radius:12px;
+      background:linear-gradient(90deg,var(--accent),var(--accent2));
+      font-size:15px;font-weight:700;
+      box-shadow:0 8px 24px rgba(255,92,156,0.24);
+      cursor:pointer;
+    }
+
+    /* HEARTS & CONFETTI */
+    .float-layer,.confetti-layer{position:absolute;inset:0;pointer-events:none;}
+
+    .heart-emoji{
+      position:absolute;
+      font-size:20px;
+      will-change:transform,opacity;
+    }
+    .confetti{
+      position:absolute;width:8px;height:14px;border-radius:2px;opacity:0;
+    }
+
+    /* BACKGROUND ROTATION */
+    .bg-item{
+      position:fixed;
+      z-index:-1;
+      pointer-events:none;
+      animation-timing-function:linear;
+    }
+
+    @keyframes spinheart{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+    @keyframes spinstar{from{transform:rotate(0)}to{transform:rotate(-360deg)}}
+
+    /* RESPONSIVE */
+    @media(max-width:520px){
+      .avatar{width:64px;height:64px;}
+      .pic{height:110px;}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    
+    <!-- HEADER -->
+    <header>
+      <div class="avatar">
+        <img src="images/friend.jpg" alt="Friend">
+      </div>
+      <div>
+        <h1>Hey beautiful — this is for you</h1>
+        <p class="lead">Just a little surprise to brighten your phone.</p>
+      </div>
+    </header>
+
+    <!-- PHOTO GALLERY -->
+    <div class="gallery">
+      <div class="pic"><img src="images/pic1.jpg"></div>
+      <div class="pic"><img src="images/pic2.jpg"></div>
+      <div class="pic"><img src="images/pic3.jpg"></div>
+      <div class="pic"><img src="images/pic4.jpg"></div>
+      <div class="pic"><img src="images/pic5.jpg"></div>
+    </div>
+
+    <!-- MESSAGE -->
+    <div class="message">
+      I made this little card overflowing with hearts, confetti, and tiny animations — all just to make you smile brighter. Every sparkle here is a reminder that someone — me — thinks you're wonderful and special. — <b>Armaan</b>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="actions">
+      <button class="btn" id="btn-love">Send Love ♥</button>
+      <button class="btn" id="btn-conf">Confetti ✨</button>
+    </div>
+
+    <div class="float-layer" id="float-layer"></div>
+    <div class="confetti-layer" id="confetti-layer"></div>
+  </div>
+
+  <!-- BACKGROUND HEARTS + STARS -->
+  <script>
+    (function(){
+      const bg = document.body;
+
+      // hearts
+      for(let i=0;i<45;i++){
+        const h=document.createElement('div');
+        h.textContent='💖';
+        h.className='bg-item';
+        h.style.fontSize=(16+Math.random()*26)+'px';
+        h.style.left=Math.random()*100+'vw';
+        h.style.top=Math.random()*100+'vh';
+        h.style.opacity=.25+Math.random()*.35;
+        h.style.animation='spinheart '+(8+Math.random()*12)+'s linear infinite';
+        bg.appendChild(h);
+      }
+
+      // stars
+      for(let i=0;i<45;i++){
+        const s=document.createElement('div');
+        s.textContent='⭐';
+        s.className='bg-item';
+        s.style.fontSize=(14+Math.random()*26)+'px';
+        s.style.left=Math.random()*100+'vw';
+        s.style.top=Math.random()*100+'vh';
+        s.style.opacity=.25+Math.random()*.35;
+        s.style.animation='spinstar '+(6+Math.random()*10)+'s linear infinite';
+        bg.appendChild(s);
+      }
+    })();
+  </script>
+
+  <!-- HEARTS + CONFETTI ACTION SCRIPT -->
+  <script>
+    const floatLayer=document.getElementById("float-layer");
+    const confettiLayer=document.getElementById("confetti-layer");
+    const btnLove=document.getElementById("btn-love");
+    const btnConf=document.getElementById("btn-conf");
+    const heartEmojis=['💖','💕','❤️','💗','💘'];
+
+    function makeConfettiBurst(){
+      for(let i=0;i<32;i++){
+        let el=document.createElement("div");
+        el.className="confetti";
+        el.style.left="50%";
+        el.style.top="10%";
+        el.style.background=['#ff5c9c','#ffb3d1','#ffd166','#7ee6c9','#9ad3ff'][Math.floor(Math.random()*5)];
+        confettiLayer.appendChild(el);
+
+        const dx=(Math.random()*200-100);
+        const dy=200+Math.random()*200;
+        const rot=(Math.random()*720-360);
+
+        const anim=el.animate([
+          {transform:`translate(0,0) rotate(0)`,opacity:1},
+          {transform:`translate(${dx}px,${dy}px) rotate(${rot}deg)`,opacity:0}
+        ],{duration:1200+Math.random()*600,easing:"cubic-bezier(.25,.65,.35,1)"});
+
+        anim.onfinish=()=>el.remove();
+      }
+    }
+
+    btnConf.addEventListener("click",makeConfettiBurst);
+
+    btnLove.addEventListener("click",()=>{
+      makeConfettiBurst();
+      for(let i=0;i<6;i++){
+        let h=document.createElement("div");
+        h.className="heart-emoji";
+        h.textContent=heartEmojis[Math.floor(Math.random()*heartEmojis.length)];
+        h.style.left=(40+Math.random()*20)+"%";
+        h.style.top="80%";
+        h.style.fontSize=(22+Math.random()*32)+"px";
+        floatLayer.appendChild(h);
+
+        const anim=h.animate([
+          {transform:"translateY(0)",opacity:1},
+          {transform:"translateY(-200px)",opacity:0}
+        ],{duration:1600+Math.random()*1000,easing:"ease-out"});
+
+        anim.onfinish=()=>h.remove();
+      }
+    });
+  </script>
+
+</body>
+</html>
